@@ -1,0 +1,351 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Memories · Somewhere in Time</title>
+<style>
+:root{--bg:#f5f1e9;--ink:#51483e;--muted:#95816d;--line:#b9a58e}
+*{box-sizing:border-box}html{scroll-behavior:smooth}body{margin:0;background:var(--bg);color:var(--ink);font-family:Georgia,"Noto Serif SC",serif}
+button,input,textarea,select{font:inherit}button{cursor:pointer}a{color:inherit}
+.top{display:flex;justify-content:space-between;align-items:center;gap:15px;padding:24px max(22px,calc((100vw - 1100px)/2));border-bottom:1px solid #e9e0d5}
+.brand{text-decoration:none;font-size:18px}.top-actions{display:flex;gap:9px;flex-wrap:wrap;justify-content:flex-end}
+.btn{border:1px solid #c9b8a5;background:transparent;color:#675443;border-radius:25px;padding:9px 15px;font-size:12px;letter-spacing:1px}
+.btn:hover{background:#eae0d4}.btn.primary{background:#75614c;color:white;border-color:#75614c}.btn.danger{color:#a05045}
+.hero{text-align:center;padding:75px 20px 48px}.eyebrow{font:11px Arial,sans-serif;letter-spacing:5px;color:#a18e79}
+h1{font-size:clamp(38px,7vw,68px);font-weight:normal;margin:24px 0 12px}.subtitle{color:var(--muted);letter-spacing:4px;font-size:14px}
+.intro{font-size:13px;color:#a18e79;margin:28px auto 0;line-height:2}
+main{max-width:1120px;margin:auto;padding:0 22px}.stage{padding:32px 0 20px;min-height:240px}
+.stage-heading{display:flex;justify-content:space-between;align-items:center;gap:12px;margin-bottom:24px}.stage-heading .hint{font:11px Arial,sans-serif;letter-spacing:3px;color:#b3a696}.stage-heading .tools{display:flex;gap:8px}
+.collections{display:flex;flex-direction:column;gap:34px}.collection{padding:5px 0 14px}.collection-head{text-align:center;margin-bottom:20px}
+.collection h2{font-weight:normal;font-size:23px;margin:4px 0 8px}.collection-note{font-size:13px;color:#968371;white-space:pre-wrap;line-height:1.9;margin:0}
+.collection-actions{margin-top:12px;display:flex;justify-content:center;gap:8px;flex-wrap:wrap}
+.photo-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:22px;align-items:start;padding:10px 6px 20px}
+.polaroid{min-width:0;background:#fffdfa;padding:9px 9px 25px;box-shadow:0 8px 22px #5c483220;transform:rotate(var(--rot));transition:transform .2s,box-shadow .2s;position:relative}
+.polaroid:hover{transform:rotate(0deg) translateY(-4px);box-shadow:0 12px 28px #5c483235}.photo-open{display:block;border:0;padding:0;background:none;width:100%}
+.photo-open img{display:block;width:100%;aspect-ratio:4/3;object-fit:cover}.photo-caption{text-align:center;color:#8c7967;font-size:12px;margin-top:10px;min-height:1em;overflow-wrap:anywhere}
+.photo-tools{display:flex;gap:4px;justify-content:center;flex-wrap:wrap;margin-top:8px}.photo-tools button{border:0;background:#f0e8df;color:#6b5643;padding:5px 8px;border-radius:12px;font-size:11px}
+.empty{text-align:center;color:#a18e79;font-size:13px;border:1px dashed #d5c5b3;padding:32px 12px;margin:12px auto;max-width:500px}
+.film{height:48px;position:relative;margin:40px -12px;transform:rotate(-4deg);opacity:.58;overflow:hidden}
+.film:before{content:"";position:absolute;inset:6px 0;background:repeating-linear-gradient(90deg,transparent 0 50px,#d7c4ae66 50px 53px),linear-gradient(#876b53,#876b53);background-size:auto,auto;box-shadow:inset 0 0 0 2px #6d513b;border-top:2px dashed #e8d7c5;border-bottom:2px dashed #e8d7c5}
+.film:after{content:"";position:absolute;inset:16px 0;border-top:1px solid #e3cfb7;border-bottom:1px solid #e3cfb7;opacity:.6}
+.more{text-align:center;margin:12px 0 25px}.bottom{text-align:center;padding:75px 20px 120px;color:#a18e79;font-style:italic;letter-spacing:2px}
+.edit-only{display:none!important}body.editing .edit-only{display:inline-flex!important}body.editing .edit-only.block{display:flex!important}
+.player{position:fixed;right:18px;bottom:18px;z-index:30;background:#f9f4eb;border:1px solid #d8c8b6;box-shadow:0 6px 30px #59463128;border-radius:18px;padding:12px;max-width:calc(100vw - 36px)}
+.player-bar{display:flex;align-items:center;gap:8px}.player .btn{padding:8px 10px}.player-title{font-size:12px;color:#806b57;max-width:150px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.player-details{margin-top:10px;display:none}.player.open .player-details{display:block}.player-details input{width:100%;accent-color:#876b53}
+.dialog-back{position:fixed;inset:0;z-index:50;background:#33291f9c;display:flex;align-items:center;justify-content:center;padding:16px}.dialog{width:min(540px,100%);max-height:90vh;overflow:auto;background:#faf6ef;border-radius:16px;padding:24px;box-shadow:0 16px 60px #0004}
+.dialog h3{font-size:22px;font-weight:normal;margin:0 0 18px}.field{display:block;margin:14px 0;color:#806b57;font-size:13px}.field input,.field textarea,.field select{display:block;margin-top:7px;width:100%;border:1px solid #d2c1ae;background:#fffdf9;border-radius:8px;padding:10px;color:#51483e}.field textarea{min-height:75px;resize:vertical}
+.dialog-actions{display:flex;justify-content:flex-end;gap:10px;margin-top:20px}.lightbox{position:fixed;inset:0;background:#221d19e8;z-index:60;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:30px 12px;gap:12px}
+.lightbox img{max-width:min(95vw,950px);max-height:75vh;object-fit:contain;background:white;padding:8px}.lightbox p{color:#eee0cf;text-align:center;white-space:pre-wrap;max-width:700px;margin:0}.lightbox-controls{display:flex;gap:10px}.lightbox .btn{color:#fff;border-color:#9d8a78}
+.notice{font-size:12px;color:#9b7760;line-height:1.8;text-align:center;margin:12px 0 0}.hidden{display:none!important}
+@media(max-width:720px){.top{padding:18px}.brand{font-size:15px}.hero{padding:55px 15px 30px}.photo-grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:15px}.polaroid{padding:7px 7px 19px}.stage{padding:20px 0}.film{margin:25px -8px;height:35px}.collection h2{font-size:19px}.player{right:9px;bottom:9px}.player-title{max-width:95px}}
+
+/* 第二版：挂绳入口 + 暖色相框墙 */
+.back-covers{margin:20px max(20px,calc((100vw - 1100px)/2));}
+.hero{padding:65px 20px 20px}.hero h1{font-size:clamp(44px,7vw,66px)}
+.cover-wrap{position:relative;max-width:1050px;margin:8px auto 70px;min-height:430px;padding-top:95px}
+.hanging-rope{position:absolute;left:0;top:0;width:100%;height:155px;pointer-events:none}
+.cover-row{display:flex;justify-content:space-around;align-items:flex-start;gap:25px;padding:0 40px}
+.hanging-card{position:relative;display:flex;flex-direction:column;align-items:center;border:0;background:#fffaf2;padding:12px 12px 22px;width:clamp(150px,24%,235px);transform:rotate(var(--tilt));box-shadow:0 9px 22px #68513c28;transition:transform .2s;z-index:1;color:#5b4634}
+.hanging-card:hover{transform:rotate(0) translateY(-7px)}
+.peg{position:absolute;top:-28px;left:calc(50% - 7px);width:14px;height:37px;background:#d4a976;border-radius:3px;box-shadow:1px 2px 4px #634d3840;z-index:2}
+.cover-image{display:flex;width:100%;aspect-ratio:4/4.6;background-size:cover;background-position:center;align-items:center;justify-content:center;background-color:#e7d3b9;background-image:linear-gradient(140deg,#d9b98e,#f3e7d4 50%,#bfa182)}
+
+.cover-placeholder{font-size:68px;color:#fff6e8;opacity:.8}.cover-caption{padding-top:16px;font-size:15px;letter-spacing:3px}
+.cover-hint{text-align:center;margin:42px 0 0;color:#a18e79;font-size:12px;letter-spacing:2px}
+.gallery-stage{padding:15px 0 70px}.gallery-intro{text-align:center;margin:4px 0 44px}.gallery-intro h2{font-weight:normal;font-size:34px;margin:0}.mini-divider{width:48px;height:1px;background:#c2aa90;margin:24px auto}
+.collections{gap:70px}.collection-head{margin-bottom:28px}.collection-head h2{font-size:21px}
+.gallery-layout{max-width:980px;margin:0 auto 30px}.wall-layout{display:flex;flex-wrap:wrap;justify-content:center;align-items:center;gap:17px 20px;padding:15px 12px}
+.framed-photo{flex:0 0 auto;width:clamp(105px,17%,178px);background:#fff9ef;padding:7px;box-shadow:0 4px 13px #5d45332a;transform:rotate(var(--angle));border:5px solid #bca084}
+.framed-photo:nth-child(4n+1){border-color:#82634a;width:clamp(115px,21%,210px)}
+.framed-photo:nth-child(5n+2){border-color:#e0c5a5;width:clamp(92px,14%,145px)}
+.framed-photo:nth-child(6n+3){border-color:#a98a6b;width:clamp(105px,16%,160px)}
+.framed-photo .photo-open img{aspect-ratio:4/3;object-fit:cover}.framed-photo:nth-child(3n+2) .photo-open img{aspect-ratio:3/4}
+.framed-photo .photo-caption{margin:5px 0 0}.framed-photo .photo-tools{max-width:100%}
+.heart-layout{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:7px;max-width:820px;position:relative;padding:12px}
+.heart-layout .framed-photo{width:100%;min-width:0;border:3px solid #dec4a7;padding:4px;transform:none;box-shadow:0 3px 10px #7b5d4421}
+.heart-layout .framed-photo:nth-child(n){width:100%;border-color:#d5b99a}
+.heart-layout .framed-photo:nth-child(7n+2),.heart-layout .framed-photo:nth-child(7n+5){border-color:#bda081}
+.heart-layout .framed-photo .photo-open img,.heart-layout .framed-photo:nth-child(3n+2) .photo-open img{aspect-ratio:1;object-fit:cover}
+.heart-layout .framed-photo:nth-child(1){grid-column:2}.heart-layout .framed-photo:nth-child(2){grid-column:3}.heart-layout .framed-photo:nth-child(3){grid-column:5}.heart-layout .framed-photo:nth-child(4){grid-column:6}
+.heart-layout .framed-photo:nth-child(5){grid-column:1}.heart-layout .framed-photo:nth-child(6){grid-column:2}.heart-layout .framed-photo:nth-child(7){grid-column:3}.heart-layout .framed-photo:nth-child(8){grid-column:4}.heart-layout .framed-photo:nth-child(9){grid-column:5}.heart-layout .framed-photo:nth-child(10){grid-column:6}.heart-layout .framed-photo:nth-child(11){grid-column:7}
+.heart-layout .framed-photo:nth-child(12){grid-column:2}.heart-layout .framed-photo:nth-child(13){grid-column:3}.heart-layout .framed-photo:nth-child(14){grid-column:4}.heart-layout .framed-photo:nth-child(15){grid-column:5}.heart-layout .framed-photo:nth-child(16){grid-column:6}
+.heart-layout .framed-photo:nth-child(17){grid-column:3}.heart-layout .framed-photo:nth-child(18){grid-column:4}
+.heart-layout:has(.framed-photo:nth-child(19)){display:flex;flex-wrap:wrap;justify-content:center;gap:10px}
+.heart-layout:has(.framed-photo:nth-child(19)) .framed-photo{width:clamp(95px,13%,130px)}
+@media(max-width:720px){.cover-wrap{min-height:270px;padding-top:56px}.hanging-rope{height:100px}.cover-row{gap:10px;padding:0 5px}.hanging-card{width:32%;padding:5px 5px 12px}.peg{top:-17px;height:24px;width:9px;left:calc(50% - 4px)}.cover-caption{font-size:11px;letter-spacing:1px;padding-top:9px}.cover-placeholder{font-size:32px}.cover-hint{margin-top:30px}.gallery-intro h2{font-size:28px}.wall-layout{gap:10px}.wall-layout .framed-photo{width:43%!important}.heart-layout{gap:3px;padding:0}.heart-layout .framed-photo{border-width:2px;padding:2px}.heart-layout .photo-tools{gap:2px}.heart-layout .photo-tools button{padding:3px;font-size:9px}}
+
+/* 温柔的装饰与微动效：不覆盖照片，不影响操作 */
+.cover-wrap::before,.cover-wrap::after{content:"";position:absolute;pointer-events:none;z-index:0;width:46px;height:46px;opacity:.65;background-repeat:no-repeat;background-size:contain}
+.cover-wrap::before{left:8%;top:4%;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 60 60'%3E%3Cellipse cx='30' cy='30' rx='27' ry='10' transform='rotate(-28 30 30)' fill='none' stroke='%23bb9a70' stroke-width='1.5'/%3E%3Ccircle cx='30' cy='30' r='13' fill='%23dfc7a6' stroke='%23b89a78'/%3E%3C/svg%3E")}
+.cover-wrap::after{right:5%;bottom:2%;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 60 60'%3E%3Cellipse cx='30' cy='30' rx='27' ry='10' transform='rotate(-28 30 30)' fill='none' stroke='%23bb9a70' stroke-width='1.5'/%3E%3Ccircle cx='30' cy='30' r='13' fill='%23dfc7a6' stroke='%23b89a78'/%3E%3C/svg%3E")}
+.deco{position:absolute;pointer-events:none;user-select:none;z-index:0;color:#c8a66e;font-size:21px;opacity:.72}
+.deco.flower{font-size:31px;color:#d6b88c;transform-origin:50% 95%;animation:flowerBreeze 9s ease-in-out infinite alternate}
+.deco.star{animation:starGlow 8s ease-in-out infinite alternate}
+.deco.a{left:5%;bottom:7%}.deco.b{right:8%;top:30%;animation-delay:-3s}.deco.c{left:22%;top:12%;font-size:16px}.deco.d{right:24%;bottom:9%;font-size:15px}
+.hanging-rope{animation:ropeBreeze 11s ease-in-out infinite alternate;transform-origin:50% 0}
+.hanging-card{animation:cardBreeze 12s ease-in-out infinite alternate;animation-delay:var(--delay,0s);transform-origin:50% -25px}
+.hanging-card:hover,body.editing .hanging-card{animation-play-state:paused}
+.gallery-layout{position:relative;isolation:isolate;min-height:190px}
+.framed-photo{z-index:1;translate:var(--dx,0px) var(--dy,0px);transition:translate .16s ease,box-shadow .2s ease;touch-action:auto}
+body.editing .framed-photo .photo-open{cursor:grab;touch-action:none}
+body.editing .framed-photo.dragging{z-index:5;transition:none;box-shadow:0 14px 32px #6b4c3850}
+body.editing .framed-photo.dragging .photo-open{cursor:grabbing}
+.drag-hint{display:none;text-align:center;font-size:12px;color:#9b8169;margin:0 0 15px}
+body.editing .drag-hint{display:block}
+@keyframes flowerBreeze{from{transform:rotate(-2deg)}to{transform:rotate(3deg)}}
+@keyframes starGlow{from{opacity:.3}to{opacity:.75}}
+@keyframes ropeBreeze{from{transform:translateY(0) rotate(-.15deg)}to{transform:translateY(2px) rotate(.15deg)}}
+@keyframes cardBreeze{from{transform:rotate(calc(var(--tilt) - .45deg))}to{transform:rotate(calc(var(--tilt) + .45deg))}}
+@media(prefers-reduced-motion:reduce){.deco,.hanging-rope,.hanging-card{animation:none!important}.framed-photo{transition:none}}
+@media(max-width:720px){.deco.flower{font-size:22px}.cover-wrap::before,.cover-wrap::after{width:28px;height:28px}}
+
+/* v4: 少量精致的植物与星球装饰，同时出现在挂绳和三个照片墙 */
+.memory-ornament{position:absolute;pointer-events:none;user-select:none;z-index:0;width:56px;height:56px;opacity:.72}
+.memory-ornament svg{display:block;width:100%;height:100%;overflow:visible}
+.memory-ornament.flower-art{transform-origin:50% 90%;animation:petalSway 11s ease-in-out infinite alternate}
+.memory-ornament.flower-art.second{animation-delay:-5s}
+.memory-ornament.planet-art{width:49px;height:49px;opacity:.53}
+.memory-ornament.spark-art{width:21px;height:21px;opacity:.46;animation:gentleGlimmer 9s ease-in-out infinite alternate}
+.cover-wrap>.memory-ornament.flower-art.first{left:1%;bottom:13%}
+.cover-wrap>.memory-ornament.flower-art.second{right:1%;bottom:17%}
+.cover-wrap>.memory-ornament.planet-art{right:8%;top:6%}
+.cover-wrap>.memory-ornament.spark-art{left:20%;top:7%}
+.gallery-stage{position:relative;isolation:isolate}
+.gallery-stage>.memory-ornament.flower-art.first{left:0;top:145px}
+.gallery-stage>.memory-ornament.flower-art.second{right:0;top:340px}
+.gallery-stage>.memory-ornament.planet-art{right:6%;top:35px}
+.gallery-stage>.memory-ornament.spark-art{left:14%;top:55px}
+.collection{position:relative;isolation:isolate}
+.collection>.memory-ornament.flower-art{right:1%;top:50px;width:35px;height:35px;opacity:.46}
+.collection>.memory-ornament.spark-art{left:7%;top:25px;width:17px;height:17px}
+.gallery-layout{z-index:1}
+@keyframes petalSway{0%{transform:rotate(-2deg)}100%{transform:rotate(3deg)}}
+@keyframes gentleGlimmer{0%{opacity:.3}100%{opacity:.64}}
+@media(max-width:720px){.memory-ornament{width:32px;height:32px}.memory-ornament.planet-art{width:32px;height:32px}.memory-ornament.spark-art{width:15px;height:15px}.gallery-stage>.memory-ornament.flower-art.second{top:250px}.collection>.memory-ornament.flower-art{width:24px;height:24px}.collection>.memory-ornament.spark-art{display:none}}
+@media(prefers-reduced-motion:reduce){.memory-ornament{animation:none!important}}
+
+/* 相框缩放：仅编辑模式显示右下角控制点 */
+.framed-photo{width:var(--photo-width,clamp(105px,17%,178px))!important;box-sizing:border-box;position:relative}
+.framed-photo:nth-child(4n+1){width:var(--photo-width,clamp(115px,21%,210px))!important}
+.framed-photo:nth-child(5n+2){width:var(--photo-width,clamp(92px,14%,145px))!important}
+.framed-photo:nth-child(6n+3){width:var(--photo-width,clamp(105px,16%,160px))!important}
+.heart-layout .framed-photo,.heart-layout .framed-photo:nth-child(n){width:var(--photo-width,100%)!important;max-width:100%;justify-self:center}
+.resize-grip{display:none;position:absolute;right:-9px;bottom:-9px;width:22px;height:22px;border:2px solid #fff9ef;border-radius:50%;background:#9e7b5d;box-shadow:0 2px 8px #44312266;cursor:nwse-resize;z-index:8;touch-action:none}
+body.editing .resize-grip{display:block!important}
+body.editing .framed-photo{outline:1px dashed #b79a7b;outline-offset:3px}
+@media(max-width:720px){.wall-layout .framed-photo{width:var(--photo-width,43%)!important;max-width:90%}.heart-layout .framed-photo{width:var(--photo-width,100%)!important}}
+
+/* Real, interactive cover — no flattened screenshot */
+body.on-cover{background:radial-gradient(ellipse at 50% 15%,#fff5e6 0%,#f3e5d5 48%,#e7d3bd 100%)}
+body.on-cover .hero{display:none}body.on-cover .top{background:#fff8f075}body.on-cover main{max-width:1250px}
+.real-cover{text-align:center;position:relative;min-height:690px;padding:35px 15px 75px}
+.cover-eyebrow{font:10px Arial,sans-serif;letter-spacing:4px;color:#ad9076}.cover-title{font-size:clamp(37px,5vw,60px);font-weight:normal;font-style:italic;margin:14px 0 4px}.cover-subtitle{color:#a18a73;font-size:13px;letter-spacing:3px}
+.real-cover .cover-wrap{margin:35px auto 15px;min-height:380px;padding-top:108px}
+.real-cover .cover-row{position:relative;z-index:1}
+.real-cover .hanging-card{width:clamp(150px,24%,240px);border:1px solid #eadfce;border-bottom:0;padding:12px 12px 21px;background:#fffbf3;box-shadow:0 15px 28px #76583b30}
+.real-cover .hanging-card .cover-image{aspect-ratio:4/4.1;background-size:cover;background-position:center}
+.cover-photo-0{background:linear-gradient(165deg,#8798ac 0%,#dfb49e 43%,#edc58c 68%,#b98e6c 100%)}
+.cover-photo-1{background:radial-gradient(circle at 50% 60%,#f5e9d8 0%,#c5c4bb 35%,#829fa8 100%)}
+.cover-photo-2{background:radial-gradient(circle at 65% 30%,#f6d6ce 0%,#d7a5a1 35%,#9aabb1 100%)}
+.real-cover .cover-placeholder{font-size:70px;color:#fff6e6;text-shadow:0 3px 15px #72563b40}
+.real-cover .cover-caption{font-style:italic;font-size:22px;letter-spacing:1px;color:#785b45}
+.real-cover .cover-hint{font-size:12px;color:#9d826a;letter-spacing:2px}.cover-enter{margin-top:15px;background:#f8eddb;border-color:#dbc5a9;padding:14px 32px;font-size:15px}
+.real-cover .memory-ornament.flower-art.first{bottom:4%;left:2%}.real-cover .memory-ornament.flower-art.second{bottom:7%;right:3%}
+.player{z-index:40}.player-details{display:none;max-width:350px}.player.open .player-details{display:block}.playlist-heading{font-size:13px;color:#806b57;margin:12px 0 8px;display:flex;justify-content:space-between}
+.playlist-list{max-height:270px;overflow:auto;display:flex;flex-direction:column;gap:3px}.playlist-song{border:0;background:transparent;border-radius:8px;color:#695746;text-align:left;padding:9px 10px;display:flex;gap:9px;font-size:12px;cursor:pointer;width:100%}.playlist-song:hover{background:#eee2d2}.playlist-song.current{background:#e6d3ba;color:#59422d;font-weight:bold}
+@media(max-width:700px){.real-cover{min-height:490px;padding:30px 5px 60px}.real-cover .cover-wrap{padding-top:70px;min-height:260px}.real-cover .hanging-card{width:32%;padding:6px 6px 13px}.real-cover .cover-caption{font-size:14px}.real-cover .cover-placeholder{font-size:36px}.real-cover .cover-title{font-size:35px}.player-details{max-width:calc(100vw - 60px)}}
+
+/* 温柔入场与相册切换：只改变透明度和轻微位移，不影响编辑数据 */
+@keyframes memoryArrival{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:translateY(0)}}
+@keyframes memoryFadeIn{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:translateY(0)}}
+body.page-enter .top{animation:memoryArrival .75s ease-out both}
+body.page-enter #stages{animation:memoryArrival 1s .12s ease-out both}
+#stages{transition:opacity .28s ease,transform .28s ease}
+#stages.stage-leaving{opacity:0;transform:translateY(-8px);pointer-events:none}
+#stages.stage-arriving{animation:memoryFadeIn .52s cubic-bezier(.2,.7,.2,1) both}
+#backToCovers{transition:opacity .25s ease}
+.music-hint{font-size:11px;color:#997a5d;line-height:1.6;max-width:280px;padding-top:8px}
+@media(prefers-reduced-motion:reduce){body.page-enter .top,body.page-enter #stages,#stages.stage-arriving{animation:none!important}#stages{transition:none!important}}
+.cover-chapter{display:block;font-size:11px;margin-top:4px;letter-spacing:1px;color:#9b806a;font-weight:normal}.publish-note{font-size:12px;color:#93785f;text-align:center;padding:7px 12px;line-height:1.8}body:not(.editing) .publish-note{display:none}@media(max-width:620px){.cover-chapter{font-size:9px;letter-spacing:0}}
+</style>
+</head>
+<body>
+<header class="top"><a class="brand" href="index.html">Somewhere in Time</a><div class="top-actions"><button class="btn" id="editToggle">进入编辑</button><button class="btn edit-only" id="exportBtn">导出相册</button><button class="btn edit-only" id="importBtn">导入相册</button></div></header>
+<button class="btn hidden back-covers" id="backToCovers">← 返回挂绳相册</button>
+<section class="hero"><div class="eyebrow">A WARM DIGITAL MEMORY ARCHIVE</div><h1>Our Memories</h1><div class="subtitle">时光相册</div></section>
+<p class="publish-note">此处编辑仅保存在当前浏览器；若要让访客看到修改，请先导出备份并重新发布相册文件。</p><main id="stages"></main>
+<footer class="bottom">To be continued…<p style="font:10px Arial,sans-serif;letter-spacing:3px;margin-top:30px">MEMORIES · PHOTOGRAPHS · STORIES</p></footer>
+<div class="player" id="player"><div class="player-bar"><button class="btn" id="playerExpand" title="展开播放器">♫</button><button class="btn" id="prevSong" title="上一首">❮</button><button class="btn" id="playSong" title="播放/暂停">▶</button><button class="btn" id="nextSong" title="下一首">❯</button><span class="player-title" id="songName">回忆歌单</span></div><div class="player-details"><label class="field">音量 <input id="volume" type="range" min="0" max="1" step="0.05" value="0.5"></label><div class="playlist-heading">回忆歌单 <span id="songCount"></span></div><div class="playlist-list" id="playlistList"></div><div class="music-hint hidden" id="musicHint">浏览器阻止了有声自动播放，点击 ▶ 即可开启音乐。</div></div></div>
+<audio id="audio" preload="none"></audio><input id="importFile" type="file" accept=".json,application/json" class="hidden">
+<div id="modalRoot"></div><div id="lightboxRoot"></div>
+<script>
+'use strict';
+// ① 歌曲配置：把 music/ 文件夹中的文件名写在这里。
+const SONGS = [
+  {"title": "Bad Girl", "src": "music/badgirl.mp3"},
+  {"title": "遇见", "src": "music/yujian.mp3.mp3"},
+  {"title": "半壶纱 · 刘珂矣", "src": "music/刘珂矣-半壶纱.mp3"},
+  {"title": "无颜女 · 小凌、徐良", "src": "music/小凌、徐良 - 无颜女.mp3"},
+  {"title": "当你 · 林俊杰", "src": "music/当你-林俊杰.mp3"},
+  {"title": "北京巷弄 · 徐良", "src": "music/徐良 - 北京巷弄.mp3"},
+  {"title": "天真 · 徐良", "src": "music/徐良 - 天真.mp3"},
+  {"title": "电话里的秘密 · 徐良", "src": "music/徐良 - 电话里的秘密.mp3"},
+  {"title": "那时雨 · 徐良", "src": "music/徐良 - 那时雨.mp3"},
+  {"title": "和平分手 · 徐良、Britneylee小暖", "src": "music/徐良、Britneylee小暖 - 和平分手.mp3"},
+  {"title": "七秒钟的记忆 · 徐良、孙羽幽", "src": "music/徐良、孙羽幽 - 七秒钟的记忆.mp3"},
+  {"title": "客官不可以 · 徐良、小凌", "src": "music/徐良、小凌 - 客官不可以.mp3"},
+  {"title": "红装 · 徐良、阿悄", "src": "music/徐良、阿悄 - 红装.mp3"},
+  {"title": "犯贱 · 徐良、阿悄", "src": "music/犯贱-徐良_阿悄.mp3"}
+];
+const STORAGE_KEY='somewhere-in-time-album-v1';
+const STAGE_COUNT=3;
+const makeId=()=>crypto.randomUUID?crypto.randomUUID():Date.now()+'-'+Math.random();
+const blank=()=>({version:1,stages:[[],[],[]]});
+let data=blank(), editing=false, songIndex=0, currentLightbox=null;
+const $=s=>document.querySelector(s);
+const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+function validate(obj){return obj&&obj.version===1&&Array.isArray(obj.stages)&&obj.stages.length===3&&obj.stages.every(s=>Array.isArray(s)&&s.every(c=>c&&typeof c.id==='string'&&typeof c.name==='string'&&Array.isArray(c.photos)&&c.photos.every(p=>p&&typeof p.id==='string'&&typeof p.src==='string')))}
+// IndexedDB 用于保存较大的相册；旧 localStorage 保留，不会主动清除。
+const DB_NAME='somewhere-in-time-album-db',DB_STORE='albums';
+let albumDB=null,hasLocalAlbum=false,saveChain=Promise.resolve(),saveFailureShown=false;
+function openAlbumDB(){return new Promise((resolve,reject)=>{if(!('indexedDB' in window)){reject(Error('浏览器不支持 IndexedDB'));return}const req=indexedDB.open(DB_NAME,1);req.onupgradeneeded=()=>{if(!req.result.objectStoreNames.contains(DB_STORE))req.result.createObjectStore(DB_STORE)};req.onsuccess=()=>resolve(req.result);req.onerror=()=>reject(req.error)})}
+function dbRead(){return new Promise((resolve,reject)=>{const tx=albumDB.transaction(DB_STORE,'readonly'),req=tx.objectStore(DB_STORE).get('main');req.onsuccess=()=>resolve(req.result);req.onerror=()=>reject(req.error)})}
+function dbWrite(snapshot){return new Promise((resolve,reject)=>{const tx=albumDB.transaction(DB_STORE,'readwrite');tx.objectStore(DB_STORE).put(snapshot,'main');tx.oncomplete=()=>resolve(true);tx.onerror=()=>reject(tx.error||Error('写入失败'));tx.onabort=()=>reject(tx.error||Error('写入中止'))})}
+function warnSave(error){console.error('相册保存失败',error);if(!saveFailureShown){saveFailureShown=true;alert('照片未能保存到浏览器。请先导出相册备份，并检查浏览器可用空间。不要清除网站数据。')}}
+function persist(){const snapshot=structuredClone(data);const task=saveChain.catch(()=>{}).then(async()=>{if(albumDB){await dbWrite(snapshot)}else{localStorage.setItem(STORAGE_KEY,JSON.stringify(snapshot))}return true});saveChain=task;task.catch(warnSave);return task}
+function change(fn){const previous=structuredClone(data);fn();render();return persist().catch(err=>{data=previous;render();return false})}
+async function initializeAlbum(){
+ // ?published=1 提供不受本机缓存影响的访客预览，不覆盖已有本机备份。
+ const previewPublished=new URLSearchParams(location.search).get('published')==='1';
+ if(previewPublished){
+  try{const r=await fetch('album.json',{cache:'no-store'});const p=r.ok?await r.json():null;if(validate(p))data=p;else throw Error('公开相册数据无效')}
+  catch(e){console.error(e);alert('无法加载公开相册：请确认 album.json 和 photos 文件夹已经上传。')}
+  const button=$('#editToggle');if(button)button.classList.add('hidden');render();return;
+ }
+ let old=null;try{const raw=localStorage.getItem(STORAGE_KEY);if(raw){const parsed=JSON.parse(raw);if(validate(parsed))old=parsed}}catch(e){console.warn('读取旧相册失败',e)}
+ try{albumDB=await openAlbumDB();const stored=await dbRead();if(validate(stored)){data=stored;hasLocalAlbum=true}else if(old){data=old;hasLocalAlbum=true;await dbWrite(structuredClone(old))}}catch(e){console.warn('IndexedDB 不可用，尝试旧存储',e);albumDB=null;if(old){data=old;hasLocalAlbum=true}}
+ if(!hasLocalAlbum){try{const r=await fetch('album.json',{cache:'no-store'});const published=r.ok?await r.json():null;if(validate(published))data=published}catch(e){console.warn('读取公开相册失败',e)}}render()}
+
+function getCollection(stage,id){return data.stages[stage]?.find(c=>c.id===id)}
+function photoById(stage,cid,pid){return getCollection(stage,cid)?.photos.find(p=>p.id===pid)}
+const STAGE_LABELS=['牙牙学语','豆蔻年华','陶陶，六连，还有吃瓜的我'];
+let activeStage=null;
+function coverPhoto(s){for(const c of data.stages[s])if(c.photos.length)return c.photos[0].src;return ''}
+// 装饰用内联 SVG，不依赖外部图片，也不会遮挡照片。
+const ORNAMENTS={
+ flower:`<svg viewBox="0 0 64 64" aria-hidden="true"><path d="M31 37Q34 51 27 63" fill="none" stroke="#9b9875" stroke-width="1.5"/><path d="M31 49Q19 40 13 47Q22 56 30 53" fill="#b9b69b" opacity=".8"/><g fill="#f2e3c8" stroke="#c7ad87" stroke-width=".8"><ellipse cx="31" cy="19" rx="7" ry="13"/><ellipse cx="31" cy="19" rx="7" ry="13" transform="rotate(72 31 31)"/><ellipse cx="31" cy="19" rx="7" ry="13" transform="rotate(144 31 31)"/><ellipse cx="31" cy="19" rx="7" ry="13" transform="rotate(216 31 31)"/><ellipse cx="31" cy="19" rx="7" ry="13" transform="rotate(288 31 31)"/></g><circle cx="31" cy="31" r="6" fill="#cda86c"/></svg>`,
+ planet:`<svg viewBox="0 0 64 64" aria-hidden="true"><ellipse cx="32" cy="33" rx="29" ry="10" transform="rotate(-24 32 33)" fill="none" stroke="#b89973" stroke-width="1.7"/><circle cx="32" cy="33" r="14" fill="#ddc8a9" stroke="#b89973" stroke-width="1"/><path d="M5 45Q31 29 59 20" fill="none" stroke="#b89973" stroke-width="1.4"/></svg>`,
+ spark:`<svg viewBox="0 0 32 32" aria-hidden="true"><path d="M16 2Q17 14 30 16Q17 18 16 30Q15 18 2 16Q15 14 16 2Z" fill="#c6a575"/></svg>`
+};
+function ornament(kind,extra=''){return `<span class="memory-ornament ${kind}-art ${extra}" aria-hidden="true">${ORNAMENTS[kind]}</span>`}
+let stageTransitionTimer=null;
+function switchStage(nextStage){
+ if(stageTransitionTimer){clearTimeout(stageTransitionTimer);stageTransitionTimer=null}
+ const root=$('#stages');
+ const reduced=window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+ if(reduced){activeStage=nextStage;render();window.scrollTo(0,0);return}
+ root.classList.remove('stage-arriving');root.classList.add('stage-leaving');
+ stageTransitionTimer=setTimeout(()=>{
+  activeStage=nextStage;render();window.scrollTo(0,0);
+  root.classList.remove('stage-leaving');root.classList.add('stage-arriving');
+  stageTransitionTimer=null;
+ },285);
+}
+function render(){
+ document.body.classList.toggle("on-cover",activeStage===null);
+ const root=$('#stages');
+ document.querySelector('.hero').classList.toggle('hidden',activeStage!==null);
+ document.querySelector('#backToCovers').classList.toggle('hidden',activeStage===null);
+ if(activeStage===null){
+  root.innerHTML=`<div class="real-cover"><div class="cover-eyebrow">A LITTLE PLACE FOR MEMORIES</div><h1 class="cover-title">Somewhere in Time</h1><p class="cover-subtitle">把日子轻轻挂在时光里</p><div class="cover-wrap"><svg class="hanging-rope" viewBox="0 0 1000 170" preserveAspectRatio="none" aria-hidden="true"><path d="M18 18 Q500 245 982 18" fill="none" stroke="#ad845d" stroke-width="4" stroke-linecap="round"/></svg><div class="cover-row">${STAGE_LABELS.map((label,i)=>`<button class="hanging-card" data-action="enterStage" data-stage="${i}" style="--tilt:${[-7,2,6][i]}deg;--delay:${[-2,-5,-8][i]}s"><span class="peg"></span><span class="cover-image cover-photo-${i}" ${coverPhoto(i)?`style="background-image:url('${esc(coverPhoto(i)).replace(/'/g,'&#39;')}')"`:''}>${coverPhoto(i)?'':`<span class="cover-placeholder">${['☼','♡','✿'][i]}</span>`}</span><span class="cover-caption">Part ${['I','II','III'][i]}<small class="cover-chapter">${esc(label)}</small></span></button>`).join('')}</div>${ornament('flower','first')}${ornament('flower','second')}${ornament('planet')}${ornament('spark')}</div><p class="cover-hint">选择一张照片，走进一段回忆</p><button class="btn cover-enter" data-action="enterStage" data-stage="0">Enter Memories →</button></div>`;
+  return;
+ }
+ const s=activeStage,collections=data.stages[s];
+ root.innerHTML=`<section class="gallery-stage">${ornament("flower","first")}${ornament("flower","second")}${ornament("planet")}${ornament("spark")}<div class="stage-heading"><span class="hint">${String(s+1).padStart(2,'0')} / 03</span><div class="tools"><button class="btn edit-only" data-action="new" data-stage="${s}">＋ 新建小集合</button></div></div><div class="gallery-intro"><h2>${STAGE_LABELS[s]}</h2><div class="mini-divider"></div></div><div class="collections">${collections.length?collections.map(c=>renderCollection(c,s)).join(''):`<div class="empty">${editing?'点击「新建小集合」，然后上传照片。':'这里还没有照片，回忆正在慢慢收集…'}</div>`}</div></section>`;
+}
+function renderCollection(c,s){
+ const visible=c.expanded?c.photos:c.photos.slice(0,18);
+ const photos=visible.map((p,i)=>`<div class="framed-photo" data-photo-id="${esc(p.id)}" data-collection-id="${esc(c.id)}" data-stage-id="${s}" style="--n:${i%12};--angle:${[-1,1,0,2,-2,1][i%6]}deg;--dx:${Number(p.x)||0}px;--dy:${Number(p.y)||0}px;${Number(p.width)>0?`--photo-width:${Math.round(p.width)}px;`:``}"><button class="photo-open" data-action="openPhoto" data-stage="${s}" data-id="${esc(c.id)}" data-photo="${esc(p.id)}"><img src="${esc(p.src)}" alt="${esc(p.title||'回忆照片')}" loading="lazy"></button>${p.title?`<div class="photo-caption">${esc(p.title)}</div>`:''}<span class="resize-grip edit-only" title="拖动调整照片大小" aria-label="调整相框大小"></span><div class="photo-tools edit-only block"><button data-action="editPhoto" data-stage="${s}" data-id="${esc(c.id)}" data-photo="${esc(p.id)}">编辑</button><button data-action="movePhoto" data-stage="${s}" data-id="${esc(c.id)}" data-photo="${esc(p.id)}">换集合</button><button data-action="deletePhoto" data-stage="${s}" data-id="${esc(c.id)}" data-photo="${esc(p.id)}">删除</button></div></div>`).join('');
+ return `<article class="collection">${ornament("flower")}${ornament("spark")}<div class="collection-head"><h2>${esc(c.name)}</h2>${c.note?`<p class="collection-note">${esc(c.note)}</p>`:''}<div class="collection-actions edit-only block"><button class="btn" data-action="editCollection" data-stage="${s}" data-id="${esc(c.id)}">编辑集合</button><button class="btn" data-action="addPhoto" data-stage="${s}" data-id="${esc(c.id)}">＋ 添加照片</button><button class="btn danger" data-action="deleteCollection" data-stage="${s}" data-id="${esc(c.id)}">删除集合</button></div></div>${c.photos.length?`<p class="drag-hint">按住照片中间移动位置 · 拖动相框右下角调整大小 · 自动保存</p><div class="gallery-layout ${s===1?'heart-layout':'wall-layout'}">${photos}</div>`:`<div class="empty">这个集合还没有照片</div>`}${c.photos.length>18?`<div class="more"><button class="btn" data-action="toggleMore" data-stage="${s}" data-id="${esc(c.id)}">${c.expanded?'收起照片':'查看更多回忆 · '+(c.photos.length-18)+' 张'}</button></div>`:''}</article>`;
+}
+function modal(title,html,onSave){const root=$('#modalRoot');root.innerHTML=`<div class="dialog-back"><div class="dialog" role="dialog" aria-modal="true"><h3>${esc(title)}</h3><form id="editForm">${html}<div class="dialog-actions"><button type="button" class="btn" id="cancelModal">取消</button><button type="submit" class="btn primary">保存</button></div></form></div></div>`;$('#cancelModal').onclick=closeModal;$('#editForm').onsubmit=e=>{e.preventDefault();onSave(new FormData(e.currentTarget))};}
+function closeModal(){$('#modalRoot').innerHTML=''}
+function editCollection(s,id){const old=id?getCollection(s,id):null;modal(old?'编辑小集合':'新建小集合',`<label class="field">集合名称<input name="name" required maxlength="60" value="${esc(old?.name||'')}"></label><label class="field">备注（可以留空）<textarea name="note" maxlength="1000">${esc(old?.note||'')}</textarea></label>`,f=>{const name=String(f.get('name')).trim();if(!name)return;change(()=>{if(old){old.name=name;old.note=String(f.get('note'))}else data.stages[s].push({id:makeId(),name,note:String(f.get('note')),photos:[]})});closeModal()})}
+function editPhoto(s,cid,pid){const p=photoById(s,cid,pid);if(!p)return;modal('编辑照片',`<label class="field">照片名称（可选）<input name="title" maxlength="80" value="${esc(p.title||'')}"></label><label class="field">备注（可选）<textarea name="note" maxlength="1000">${esc(p.note||'')}</textarea></label>`,f=>{change(()=>{p.title=String(f.get('title'));p.note=String(f.get('note'))});closeModal()})}
+function movePhoto(s,cid,pid){const c=getCollection(s,cid),p=photoById(s,cid,pid);if(!p)return;const options=data.stages.flatMap((cols,si)=>cols.map(col=>({si,id:col.id,name:col.name})));modal('移动照片',`<label class="field">目标集合<select name="target">${options.map(o=>`<option value="${o.si}|${esc(o.id)}" ${o.si===s&&o.id===cid?'selected':''}>${o.si+1} · ${esc(o.name)}</option>`).join('')}</select></label><label class="field">在集合中的位置<select name="position"><option value="end">放到最后</option><option value="start">放到最前</option></select></label>`,f=>{const [si,id]=String(f.get('target')).split('|'),target=getCollection(Number(si),id);if(!target)return;change(()=>{c.photos=c.photos.filter(x=>x.id!==pid);if(f.get('position')==='start')target.photos.unshift(p);else target.photos.push(p)});closeModal()})}
+function addPhotos(s,cid){modal('添加照片',`<label class="field">选择照片（可以一次选择多张）<input name="files" type="file" accept="image/*" multiple required></label><p class="notice">自动压缩照片并逐张保存。大量照片需要一点时间，请勿关闭页面。</p>`,async()=>{const files=Array.from($('#editForm [name="files"]').files||[]).filter(f=>f.type.startsWith('image/'));if(!files.length)return;const button=$('#editForm button[type="submit"]');button.disabled=true;let added=0;try{for(let i=0;i<files.length;i++){button.textContent=`正在保存 ${i+1}/${files.length}…`;const src=await compressImage(files[i]);const result=await change(()=>getCollection(s,cid).photos.push({id:makeId(),src,title:'',note:''}));if(result===false)break;added++}closeModal();alert(`已成功保存 ${added} 张照片${added<files.length?'，其余照片未保存，请检查浏览器空间。':''}`)}catch(e){closeModal();alert(`已保存 ${added} 张，后续照片处理失败：${e.message}`)}finally{button.disabled=false;button.textContent='保存'}})}
+function compressImage(file){return new Promise((resolve,reject)=>{const url=URL.createObjectURL(file),img=new Image();img.onerror=()=>{URL.revokeObjectURL(url);reject(Error('图片格式无法读取'))};img.onload=()=>{try{const max=1100,scale=Math.min(1,max/Math.max(img.width,img.height)),canvas=document.createElement('canvas');canvas.width=Math.max(1,Math.round(img.width*scale));canvas.height=Math.max(1,Math.round(img.height*scale));canvas.getContext('2d').drawImage(img,0,0,canvas.width,canvas.height);resolve(canvas.toDataURL('image/jpeg',0.7))}catch(e){reject(e)}finally{URL.revokeObjectURL(url)}};img.src=url})}
+function openPhoto(s,cid,pid){const c=getCollection(s,cid);const index=c.photos.findIndex(p=>p.id===pid);if(index<0)return;currentLightbox={s,cid,index};drawLightbox()}
+function drawLightbox(){if(!currentLightbox)return;const {s,cid,index}=currentLightbox,c=getCollection(s,cid),p=c?.photos[index];if(!p){closeLightbox();return}$('#lightboxRoot').innerHTML=`<div class="lightbox" role="dialog" aria-modal="true"><img src="${esc(p.src)}" alt="${esc(p.title||'回忆照片')}"><p>${esc([p.title,p.note].filter(Boolean).join('\n'))}</p><div class="lightbox-controls"><button class="btn" id="lightPrev">❮ 上一张</button><button class="btn" id="lightClose">关闭</button><button class="btn" id="lightNext">下一张 ❯</button></div></div>`;$('#lightClose').onclick=closeLightbox;$('#lightPrev').onclick=()=>{currentLightbox.index=(index-1+c.photos.length)%c.photos.length;drawLightbox()};$('#lightNext').onclick=()=>{currentLightbox.index=(index+1)%c.photos.length;drawLightbox()}}
+function closeLightbox(){currentLightbox=null;$('#lightboxRoot').innerHTML=''}
+$('#stages').addEventListener('click',e=>{const b=e.target.closest('[data-action]');if(!b)return;const a=b.dataset.action,s=Number(b.dataset.stage),id=b.dataset.id,pid=b.dataset.photo,c=getCollection(s,id);if(a==='enterStage'){switchStage(s);tryAutoplayMusic();return}if(a==='new')editCollection(s);if(a==='editCollection')editCollection(s,id);if(a==='addPhoto')addPhotos(s,id);if(a==='editPhoto')editPhoto(s,id,pid);if(a==='movePhoto')movePhoto(s,id,pid);if(a==='openPhoto')openPhoto(s,id,pid);if(a==='toggleMore'){c.expanded=!c.expanded;render()}if(a==='deletePhoto'&&confirm('确定删除这张照片吗？请确保已经导出备份。'))change(()=>{c.photos=c.photos.filter(p=>p.id!==pid)});if(a==='deleteCollection'&&confirm('确定删除整个集合及其中的照片吗？请确保已经导出备份。'))change(()=>{data.stages[s]=data.stages[s].filter(x=>x.id!==id)})});
+// 在编辑模式拖动照片：位置作为像素偏移保存到原相册 JSON。
+// 浏览模式仍可正常点击放大；心形相册仅允许在初始位置附近微调。
+let dragState=null, suppressPhotoClick=false;
+$('#stages').addEventListener('pointerdown',e=>{
+ if(!editing || e.button!==0)return;
+ const grip=e.target.closest('.framed-photo .resize-grip');
+ const opener=e.target.closest('.framed-photo .photo-open');
+ if(!opener&&!grip)return;
+ const card=(grip||opener).closest('.framed-photo'), wall=card.closest('.gallery-layout');
+ if(!wall)return;
+ const stage=Number(card.dataset.stageId),collection=card.dataset.collectionId,photo=photoById(stage,collection,card.dataset.photoId);
+ if(!photo)return;
+ const x=Number(photo.x)||0,y=Number(photo.y)||0;
+ dragState={card,wall,opener:opener||grip,photo,startX:e.clientX,startY:e.clientY,x,y,moved:false,stage,resizing:!!grip,initialWidth:card.getBoundingClientRect().width,oldWidth:photo.width};
+ (opener||grip).setPointerCapture(e.pointerId);
+ e.preventDefault();
+});
+$('#stages').addEventListener('pointermove',e=>{
+ const d=dragState;if(!d)return;
+ const deltaX=e.clientX-d.startX,deltaY=e.clientY-d.startY;
+ if(Math.hypot(deltaX,deltaY)>4)d.moved=true;
+ if(!d.moved)return;
+ if(d.resizing){const maxWidth=d.stage===1?Math.min(180,d.wall.clientWidth*.24):Math.min(420,d.wall.clientWidth*.75);const width=Math.round(Math.max(65,Math.min(maxWidth,d.initialWidth+deltaX)));d.photo.width=width;d.card.style.setProperty('--photo-width',width+'px');d.card.classList.add('dragging');return}
+ const limit=d.stage===1?40:Math.max(80,Math.min(220,d.wall.clientWidth*.22));
+ let x=Math.max(-limit,Math.min(limit,d.x+deltaX));
+ let y=Math.max(-limit,Math.min(limit,d.y+deltaY));
+ // 把偏移限制在照片墙的边界内。
+ const wr=d.wall.getBoundingClientRect(),cr=d.card.getBoundingClientRect();
+ x=Math.max(x, x+wr.left-cr.left+6);x=Math.min(x,x+wr.right-cr.right-6);
+ y=Math.max(y, y+wr.top-cr.top+6);y=Math.min(y,y+wr.bottom-cr.bottom-6);
+ d.photo.x=Math.round(x);d.photo.y=Math.round(y);
+ d.card.style.setProperty('--dx',d.photo.x+'px');d.card.style.setProperty('--dy',d.photo.y+'px');
+ d.card.classList.add('dragging');
+});
+function finishDrag(){
+ const d=dragState;if(!d)return;
+ d.card.classList.remove('dragging');
+ if(d.moved){suppressPhotoClick=true;setTimeout(()=>suppressPhotoClick=false,100);persist().catch(()=>{d.photo.x=d.x;d.photo.y=d.y;d.photo.width=d.oldWidth;d.card.style.setProperty('--dx',d.x+'px');d.card.style.setProperty('--dy',d.y+'px');if(d.oldWidth)d.card.style.setProperty('--photo-width',d.oldWidth+'px');else d.card.style.removeProperty('--photo-width')})}dragState=null;
+}
+$('#stages').addEventListener('pointerup',finishDrag);
+$('#stages').addEventListener('pointercancel',finishDrag);
+$('#stages').addEventListener('click',e=>{if(suppressPhotoClick&&e.target.closest('.photo-open')){e.stopImmediatePropagation();e.preventDefault();suppressPhotoClick=false}},true);
+$('#backToCovers').onclick=()=>switchStage(null);
+$('#editToggle').onclick=()=>{editing=!editing;document.body.classList.toggle('editing',editing);$('#editToggle').textContent=editing?'完成编辑':'进入编辑';render()};
+$('#exportBtn').onclick=()=>{const blob=new Blob([JSON.stringify(data,null,2)],{type:'application/json'}),url=URL.createObjectURL(blob),a=document.createElement('a');a.href=url;a.download='somewhere-in-time-album-'+new Date().toISOString().slice(0,10)+'.json';a.click();setTimeout(()=>URL.revokeObjectURL(url),1000)};
+$('#importBtn').onclick=()=>$('#importFile').click();$('#importFile').onchange=async e=>{const file=e.target.files[0];if(!file)return;try{const incoming=JSON.parse(await file.text());if(!validate(incoming))throw Error('文件格式不正确');if(!confirm('导入会覆盖这个浏览器当前的相册，建议先导出备份。确定继续吗？'))return;const old=data;data=incoming;try{await persist()}catch(err){data=old;render();throw err}render();alert('导入成功！注意：这只更新当前浏览器，尚未发布到所有人的网站。')}catch(err){alert('导入失败：'+err.message)}finally{e.target.value=''}};
+document.addEventListener('keydown',e=>{if(e.key==='Escape'){closeModal();closeLightbox()}if(currentLightbox&&e.key==='ArrowLeft')$('#lightPrev')?.click();if(currentLightbox&&e.key==='ArrowRight')$('#lightNext')?.click()});
+const audio=$('#audio');audio.volume=.5;function showSong(){renderPlaylist();if(!SONGS.length){$('#songName').textContent='暂无歌曲';return}$('#songName').textContent=SONGS[songIndex].title;audio.src=SONGS[songIndex].src}
+function play(){if(!SONGS.length){alert('还没有添加音乐。请把 MP3 文件放入 music 文件夹，并修改代码顶部的 SONGS 歌单。');return}if(audio.paused){audio.play().catch(()=>alert('音乐无法播放，请检查 MP3 路径。'))}else audio.pause()}
+function skip(n){if(!SONGS.length)return;songIndex=(songIndex+n+SONGS.length)%SONGS.length;showSong();audio.play().catch(()=>{})}
+let autoplayAttempted=false, userPausedMusic=false;
+function showMusicHint(){const hint=$('#musicHint');if(hint){hint.classList.remove('hidden');$('#player').classList.add('open')}}
+function hideMusicHint(){const hint=$('#musicHint');if(hint)hint.classList.add('hidden')}
+function tryAutoplayMusic(){
+ if(!SONGS.length || userPausedMusic || !audio.paused)return;
+ autoplayAttempted=true;
+ const attempt=audio.play();
+ if(attempt && typeof attempt.then==='function')attempt.then(hideMusicHint).catch(showMusicHint);
+}
+// 浏览器可能拦截初次有声自动播放。第一次点击页面时再尝试一次。
+document.addEventListener('pointerdown',e=>{
+ if(e.target.closest('#player'))return;
+ if(autoplayAttempted && !userPausedMusic && audio.paused)tryAutoplayMusic();
+},{passive:true});
+$('#playSong').onclick=()=>{if(audio.paused){userPausedMusic=false;hideMusicHint()}else{userPausedMusic=true}play()};$('#prevSong').onclick=()=>skip(-1);$('#nextSong').onclick=()=>skip(1);$('#playerExpand').onclick=()=>$('#player').classList.toggle('open');$('#volume').oninput=e=>audio.volume=Number(e.target.value);
+function renderPlaylist(){const el=$('#playlistList');if(!el)return;$('#songCount').textContent=SONGS.length+' 首';el.innerHTML=SONGS.map((song,i)=>`<button class="playlist-song ${i===songIndex?'current':''}" data-song-index="${i}"><span>${i===songIndex?'♫':'♪'}</span><span>${esc(song.title)}</span></button>`).join('')}
+$('#playlistList').addEventListener('click',e=>{const b=e.target.closest('[data-song-index]');if(!b)return;songIndex=Number(b.dataset.songIndex);showSong();audio.play().catch(()=>alert('无法播放，请检查音乐文件路径和授权。'))});audio.onplay=()=>{hideMusicHint();$('#playSong').textContent='❚❚'};audio.onpause=()=>$('#playSong').textContent='▶';audio.onended=()=>skip(1);showSong();document.body.classList.add('page-enter');initializeAlbum();tryAutoplayMusic();
+</script>
+</body>
+</html>
